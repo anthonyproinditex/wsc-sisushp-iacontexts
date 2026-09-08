@@ -74,6 +74,7 @@ Estas reglas aplican a cualquier historia y repositorio del proyecto salvo que e
 
 - Rama: `feature/<KEY-JIRA>`
   - Ejemplo: `feature/SISUSHIP-3474`
+  - Regla crítica: si ya existe la rama canónica de la historia, no debe crearse otra rama automática por herramientas de soporte, PR helpers o automation. La rama de la historia siempre debe mantenerse consistente con la clave Jira.
 - Mensajes de commit: `[<KEY-JIRA>] <descripción corta>`
   - Ejemplo: `[SISUSHIP-3474] update transfer validation contract`
 - Título del PR: `[<KEY-JIRA>] <resumen>`
@@ -81,8 +82,16 @@ Estas reglas aplican a cualquier historia y repositorio del proyecto salvo que e
 - El PR se crea inicialmente en estado `draft` y solo se marca como listo para revisión cuando está preparado para revisión formal.
 - Descripción del PR: debe contener exclusivamente la URL de la historia Jira.
   - Ejemplo: `https://jira.inditex.com/jira/browse/SISUSHIP-3474`
-- No se deben incluir textos extra, explicaciones adicionales ni comentarios de business en la descripción del PR.
+  - No se deben incluir textos extra, explicaciones adicionales ni comentarios de business en la descripción del PR.
 - La clave Jira debe mantenerse visible en la rama, el commit y el PR para que cualquier compañero pueda rastrear la historia de forma inmediata.
+- Reglas anti-regresión para agentes y asistentes IA:
+  - Antes de crear una PR, validar siempre la rama canónica de la historia: `feature/<KEY-JIRA>`.
+  - Antes de abrir un PR, validar la base del repositorio objetivo (normalmente `develop`) y la rama de origen.
+  - Si una herramienta automática genera una rama con patrón distinto (por ejemplo `feature/GH-2846-...`), se debe cerrar el PR generado y recrearlo desde la rama canónica de la historia.
+  - Nunca se debe dejar que un helper de PR o un asistente invente una rama distinta a la de la historia si ya existe la rama válida.
+  - El flujo correcto es: rama de historia → commit con clave Jira → PR en draft → cuerpo con URL de Jira → revisión formal.
+
+Esto evita que se creen branches inconsistentes con la trazabilidad de la historia y que se pierda el contexto de la evolución real del trabajo entre repositorios y agentes.
 
 ## Excepción específica del proyecto app
 
