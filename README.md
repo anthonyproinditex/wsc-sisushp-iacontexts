@@ -78,6 +78,7 @@ Estas reglas aplican a cualquier historia y repositorio del proyecto salvo que e
   - Ejemplo: `[SISUSHIP-3474] update transfer validation contract`
 - Título del PR: `[<KEY-JIRA>] <resumen>`
   - Ejemplo: `[SISUSHIP-3474] Align transfer validation contract`
+- El PR se crea inicialmente en estado `draft` y solo se marca como listo para revisión cuando está preparado para revisión formal.
 - Descripción del PR: debe contener exclusivamente la URL de la historia Jira.
   - Ejemplo: `https://jira.inditex.com/jira/browse/SISUSHIP-3474`
 - No se deben incluir textos extra, explicaciones adicionales ni comentarios de business en la descripción del PR.
