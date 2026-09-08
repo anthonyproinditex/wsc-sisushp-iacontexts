@@ -68,6 +68,19 @@ Cada historia debe incluir una referencia al contexto compartido. Por ejemplo:
 > Recursos reutilizables: `story-context/templates/story-template.md`, `story-context/prompts/generic-agent-prompt.md`.
 ```
 
+## Convenciones de flujo de PR para app
+
+Para las historias del proyecto `app`, además del flujo de rama y descripción del PR, se deben aplicar estas reglas por defecto:
+
+- Crear siempre el PR en la rama de `stage`/entorno de staging.
+- El PR debe incluir las etiquetas `api/preview` y `autopublish/snapshot-binaries`.
+- La descripción del PR debe contener exclusivamente la URL de la historia Jira.
+  - Ejemplo: `https://jira.inditex.com/jira/browse/SISUSHIP-3474`
+- No se deben incluir textos de explicación ni justificación en la descripción del PR.
+- Si el repositorio o el pipeline lo requiere, estas etiquetas deben añadirse en el momento de crear el PR o en la primera edición posterior.
+
+Esto garantiza que el PR quede alineado con la publicación automática de snapshot y con la trazabilidad de la historia.
+
 ## Propósito de cada tipo de recurso
 
 - `templates/`: asegurar que todas las historias tengan el mismo nivel de detalle.
