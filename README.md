@@ -91,6 +91,10 @@ Para el repositorio `app-sisuship`, además de las reglas globales, se deben apl
 - Crear siempre el PR desde la rama de `stage`/entorno de staging.
 - El PR debe incluir, por defecto, las etiquetas `api/preview` y `autopublish/snapshot-binaries`.
 - Si el repositorio o el pipeline no dispone de esas etiquetas o las requiere con otro nombre, se deben ajustar siguiendo la política del repositorio, pero sin romper la regla global de la URL de Jira en la descripción del PR.
+- Antes de crear o modificar un contrato API, el agente debe evaluar el impacto del cambio: compatibilidad, consumidores y alcance del contrato, y decidir si requiere una versión nueva del contrato.
+- Si se crea o modifica un contrato en `app-sisuship`, debe subirse la versión del archivo o archivos del contrato afectados antes de lanzar cualquier generación de artefactos o publicación.
+- Si no se detecta un cambio real de versión en el contrato, el pipeline no genera el snapshot aunque se lance la generación del artefacto; la versión es el trigger de publicación.
+- El comando `/generate-api --name "SISU Ship CD1 API v1" --packaging mvn` debe entenderse como la invocación del build de artefactos de la API y debe ejecutarse después de subir la versión del contrato, nunca antes.
 
 Esto garantiza que el PR quede alineado con la publicación automática de snapshot y con la trazabilidad de la historia en `app-sisuship`.
 
