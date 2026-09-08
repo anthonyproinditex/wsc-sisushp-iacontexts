@@ -1,0 +1,14 @@
+README.md
+  h_4a57845b03d11d 81
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "34da4183405e5fb3392c5dbce30e29708e9f7cf0",
+  "prompts": {},
+  "humans": {
+    "h_4a57845b03d11d": {
+      "author": "Anthony Piñero <anthonypro@ext.inditex.com>"
+    }
+  }
+}
