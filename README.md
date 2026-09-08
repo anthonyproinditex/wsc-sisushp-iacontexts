@@ -68,18 +68,30 @@ Cada historia debe incluir una referencia al contexto compartido. Por ejemplo:
 > Recursos reutilizables: `story-context/templates/story-template.md`, `story-context/prompts/generic-agent-prompt.md`.
 ```
 
-## Convenciones de flujo de PR para app
+## Convenciones globales para todas las historias
 
-Para las historias del proyecto `app`, además del flujo de rama y descripción del PR, se deben aplicar estas reglas por defecto:
+Estas reglas aplican a cualquier historia y repositorio del proyecto salvo que exista una excepción explícita por repositorio:
 
-- Crear siempre el PR en la rama de `stage`/entorno de staging.
-- El PR debe incluir las etiquetas `api/preview` y `autopublish/snapshot-binaries`.
-- La descripción del PR debe contener exclusivamente la URL de la historia Jira.
+- Rama: `feature/<KEY-JIRA>`
+  - Ejemplo: `feature/SISUSHIP-3474`
+- Mensajes de commit: `[<KEY-JIRA>] <descripción corta>`
+  - Ejemplo: `[SISUSHIP-3474] update transfer validation contract`
+- Título del PR: `[<KEY-JIRA>] <resumen>`
+  - Ejemplo: `[SISUSHIP-3474] Align transfer validation contract`
+- Descripción del PR: debe contener exclusivamente la URL de la historia Jira.
   - Ejemplo: `https://jira.inditex.com/jira/browse/SISUSHIP-3474`
-- No se deben incluir textos de explicación ni justificación en la descripción del PR.
-- Si el repositorio o el pipeline lo requiere, estas etiquetas deben añadirse en el momento de crear el PR o en la primera edición posterior.
+- No se deben incluir textos extra, explicaciones adicionales ni comentarios de business en la descripción del PR.
+- La clave Jira debe mantenerse visible en la rama, el commit y el PR para que cualquier compañero pueda rastrear la historia de forma inmediata.
 
-Esto garantiza que el PR quede alineado con la publicación automática de snapshot y con la trazabilidad de la historia.
+## Excepción específica del proyecto app
+
+Para el repositorio `app-sisuship`, además de las reglas globales, se deben aplicar estas condiciones concretas:
+
+- Crear siempre el PR desde la rama de `stage`/entorno de staging.
+- El PR debe incluir, por defecto, las etiquetas `api/preview` y `autopublish/snapshot-binaries`.
+- Si el repositorio o el pipeline no dispone de esas etiquetas o las requiere con otro nombre, se deben ajustar siguiendo la política del repositorio, pero sin romper la regla global de la URL de Jira en la descripción del PR.
+
+Esto garantiza que el PR quede alineado con la publicación automática de snapshot y con la trazabilidad de la historia en `app-sisuship`.
 
 ## Propósito de cada tipo de recurso
 
