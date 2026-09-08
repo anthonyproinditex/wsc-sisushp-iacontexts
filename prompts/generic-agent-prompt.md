@@ -57,6 +57,10 @@ Antes de ejecutar cualquier movimiento de contexto, historial, rama, PR o rebase
 8. Mantén el flujo de trabajo incremental: primero documentar, luego validar, luego ejecutar cambios destructivos.
 9. No cierres, reabres ni recrees PRs sin comprobar si la rama comparte historial con la base y si se puede reusar la PR actual.
 10. Revisa los cambios pendientes y el estado de Git antes de considerar que algo está "hecho" o "subido".
+11. Antes de generar artefactos o snapshots, lee la versión actual del API bundle afectado y evalúa el impacto del cambio para decidir si hace falta un bump de versión.
+12. Cuando se crea o modifica un contrato API en `app-sisuship`, la versión del bundle debe incrementarse antes de lanzar `/generate-api --name "SISU Ship CD1 API v1" --packaging mvn`.
+13. Si el contrato cambia y la versión no cambia, el pipeline no publica snapshot porque no detecta un cambio real; la versión es la señal de publicación.
+14. El comando `/generate-api --name "SISU Ship CD1 API v1" --packaging mvn` debe ejecutarse después de subir la versión del contrato, no antes, porque la build se dispara desde el cambio versionado y no desde el cambio de contenido solo.
 
-Estas reglas sirven para evitar duplicidades, rebase innecesario, pérdida de contexto y inconsistencias entre historias.
+Estas reglas sirven para evitar duplicidades, rebase innecesario, pérdida de contexto, inconsistencias entre historias y publicación fallida de snapshots por falta de versionado real del contrato.
 ```
