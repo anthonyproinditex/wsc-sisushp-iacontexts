@@ -125,6 +125,23 @@ Se debe adaptar el endpoint de consulta de todos los items abordado en la tarea 
 
 Existe una duda funcional sobre qué ocurre si se siguen asignando pallets al camión de origen mientras la operación de traspaso está en curso. Esta condición afecta al comportamiento correcto en la tarea relacionada.
 
+## Estado de alcance
+
+### Stand by
+
+El segundo punto del refinamiento técnico queda oficialmente en stand by para esta iteración.
+
+- No se incluye en la implementación actual de la historia.
+- Se deja reservado para una segunda fase de trabajo posterior.
+- Se mantiene como referencia técnica futura, pero no formará parte del alcance de esta entrega ni del plan de TDD activo.
+
+### Alcance activo
+
+La implementación actual se centra exclusivamente en el punto 1 del refinamiento técnico:
+
+- validación de compatibilidad del traspaso entre camiones
+- análisis de las 6 validaciones de negocio definidas en `context.md`
+
 ## Observación para agentes
 
 Este documento no sustituye la intención de negocio; su objetivo es describir el punto de entrada técnico que probablemente habrá que tocar. Para entender el comportamiento esperado, debe combinarse con `context.md` y `tests.md`.
