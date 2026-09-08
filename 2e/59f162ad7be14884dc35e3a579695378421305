@@ -1,0 +1,46 @@
+README.md
+  h_4a57845b03d11d 1-82
+checklists/story-readiness-checklist.md
+  h_4a57845b03d11d 1-21
+checklists/story-validation-checklist.md
+  h_4a57845b03d11d 1-28
+examples/SISUSHIP-3474/README.md
+  h_4a57845b03d11d 1-44
+examples/SISUSHIP-3474/context.md
+  h_4a57845b03d11d 1-75
+examples/SISUSHIP-3474/queries/01_seed_data.sql
+  h_4a57845b03d11d 1-25
+examples/SISUSHIP-3474/queries/02_validate_results.sql
+  h_4a57845b03d11d 1-19
+examples/SISUSHIP-3474/queries/03_cleanup.sql
+  h_4a57845b03d11d 1-6
+examples/SISUSHIP-3474/technical.md
+  h_4a57845b03d11d 1-130
+examples/SISUSHIP-3474/tests.md
+  h_4a57845b03d11d 1-110
+prompts/generic-agent-prompt.md
+  h_4a57845b03d11d 1-44
+prompts/generic-research-prompt.md
+  h_4a57845b03d11d 1-31
+prompts/generic-validation-prompt.md
+  h_4a57845b03d11d 1-28
+templates/data-template.md
+  h_4a57845b03d11d 1-36
+templates/story-template.md
+  h_4a57845b03d11d 1-80
+templates/technical-template.md
+  h_4a57845b03d11d 1-46
+templates/tests-template.md
+  h_4a57845b03d11d 1-39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "2e59f162ad7be14884dc35e3a579695378421305",
+  "prompts": {},
+  "humans": {
+    "h_4a57845b03d11d": {
+      "author": "Anthony Piñero <anthonypro@ext.inditex.com>"
+    }
+  }
+}
