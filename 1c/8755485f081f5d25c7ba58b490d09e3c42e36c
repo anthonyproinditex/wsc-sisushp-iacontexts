@@ -1,0 +1,18 @@
+features/SISUSHIP-3474/tdd-plan.md
+  h_4a57845b03d11d 1-140
+features/SISUSHIP-3474/technical.md
+  h_4a57845b03d11d 128-144
+templates/tdd-first-template.md
+  h_4a57845b03d11d 1-60
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "1c8755485f081f5d25c7ba58b490d09e3c42e36c",
+  "prompts": {},
+  "humans": {
+    "h_4a57845b03d11d": {
+      "author": "Anthony Piñero <anthonypro@ext.inditex.com>"
+    }
+  }
+}
