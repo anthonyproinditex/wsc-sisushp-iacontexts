@@ -1,0 +1,14 @@
+prompts/generic-agent-prompt.md
+  h_4a57845b03d11d 45-62
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "0199a9c324954fc645e143b5470947b1f1c20143",
+  "prompts": {},
+  "humans": {
+    "h_4a57845b03d11d": {
+      "author": "Anthony Piñero <anthonypro@ext.inditex.com>"
+    }
+  }
+}
