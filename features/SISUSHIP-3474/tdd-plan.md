@@ -2,139 +2,109 @@
 
 ## Objetivo
 
-Definir primero el comportamiento esperado de la validación de traspaso entre camiones para que la implementación quede guiada por casos de prueba reproducibles y verificables.
+Definir una suite TDD **clara, trazable y ejecutable** para la validación de traspasos entre camiones en el endpoint:
 
-## Regla de trabajo
+- `POST /v1/transfer/validate`
+- request `type = "TRUCK"`
 
-Se empezará por escribir las pruebas que describen el comportamiento esperado y se ejecutarán antes de tocar la lógica de negocio.
+La suite debe guiar implementación incremental (Red → Green → Refactor) y garantizar que el backend devuelve reglas de incompatibilidad, no solo un booleano.
 
-## Orden recomendado
+## Alcance activo de esta iteración
 
-### 1. Definir el primer bloque de pruebas críticas
+Se cubre únicamente el punto 1 del RF técnico:
 
-Priorizar los casos con mayor riesgo operativo:
+- validación de compatibilidad en `transfer/validate` para `TRUCK`.
 
-- planificacion incompatible
-- tienda sin ruta asociada
-- volumen excedido
-- origen finalizado
-- destino cerrado
-- ETD en pasado
-- orden incompatible
+Quedan fuera de esta iteración (stand by):
 
-### 2. Convertir criterios funcionales en tests
+- `POST /v1/transfer/truck/search`
+- cambios en `/v1/transfer/all-items` (dependencia SISUSHIP-3473).
 
-#### Test 01: when_destination_has_different_planification_expect_warning
+## Convención de organización
 
-- Entrada: origen y destino con distinta planificación.
-- Esperado:
-  - `isCompatible = false`
-  - `incompatibilityLevel` informado
-  - reglas con `ROUTES-LOCATIONS` no válida
-  - `message` claro sobre rutas a añadir
-  - confirmación del usuario requerida
+La historia se estructura en **6 validaciones principales**. Los casos TDD se agrupan por validación para facilitar implementación y trazabilidad:
 
-#### Test 02: when_origin_store_has_no_route_expect_warning
+1. Planificación incompatible (incluye tienda sin ruta)
+2. Volumen insuficiente destino
+3. Origen finalizado
+4. Destino cerrado
+5. ETD destino en pasado
+6. Orden incompatible
 
-- Entrada: al menos una tienda del origen sin ruta asociada.
-- Esperado:
-  - se identifica la tienda sin ruta
-  - se informa en la regla de incompatibilidad
-  - el usuario debe poder decidir continuar
+> Nota de interpretación: en Jira aparece el título “Camión destino finalizado”, pero la descripción y criterios hablan de **camión origen finalizado**. Para TDD se toma **origen finalizado** como fuente funcional.
 
-#### Test 03: when_destination_volume_is_insufficient_expect_warning
+## Matriz TDD por validación
 
-- Entrada: destino sin capacidad para la carga a traspasar.
-- Esperado:
-  - regla `VOLUME` inválida
-  - mensaje de volumen excedido
-  - confirmación explícita
+| Validación | Caso TDD | Objetivo del test | Resultado esperado mínimo |
+|---|---|---|---|
+| V1 Planificación incompatible | `when_destination_has_different_planification_expect_warning` | Detectar diferencias de planificación origen/destino | `isCompatible=false`, `incompatibilityLevel=PARTIAL`, regla `ROUTES-LOCATIONS` inválida, `commonCriteria` con rutas impactadas |
+| V1 Planificación incompatible | `when_origin_store_has_no_route_expect_warning` | Cubrir caso especial de tienda sin ruta asociada | Warning de planificación + evidencia de tienda sin ruta (en `commonCriteria`/parámetros de regla) |
+| V2 Volumen insuficiente | `when_destination_volume_is_insufficient_expect_warning` | Detectar sobrecapacidad en destino | Regla `VOLUME` inválida + mensaje de volumen excedido + confirmación requerida |
+| V3 Origen finalizado | `when_origin_truck_is_finalized_expect_open_option` | Avisar estado finalizado y permitir reapertura del origen | Regla `FINALIZED` inválida + marca/indicio funcional de opción de reapertura |
+| V4 Destino cerrado | `when_destination_truck_is_closed_expect_warning` | Bloquear reapertura directa de destino | Warning de cerrado + indicación de proceso habitual (sin reapertura directa) |
+| V5 ETD pasada | `when_etd_is_in_past_expect_warning` | Informar ETD vencida manteniendo continuidad del flujo | Warning informativo + continuidad condicionada a confirmación |
+| V6 Orden incompatible | `when_order_is_incompatible_expect_warning` | Reportar incompatibilidad de orden | Regla de orden inválida + mensaje específico |
 
-#### Test 04: when_origin_truck_is_finalized_expect_open_option
+## Diseño de pruebas (nivel backend)
 
-- Entrada: camión origen en estado finalizado.
-- Esperado:
-  - regla `FINALIZED` no válida
-  - aviso con opción de reabrir directamente
+### Suite principal de caso de uso
 
-#### Test 05: when_destination_truck_is_closed_expect_non_reopen_warning
+- Clase objetivo: `TransferValidateTruckUseCaseTest`
+- Método bajo prueba: `validateTruck(UUID originId, UUID destinationId, int dcgCode)`
+- Enfoque: tests unitarios por validación con dobles de repositorio.
 
-- Entrada: camión destino cerrado.
-- Esperado:
-  - aviso informativo
-  - no opción directa de reapertura
-  - mensaje de proceso habitual
+### Estructura esperada
 
-#### Test 06: when_destination_etd_is_in_the_past_expect_info_warning
+- Agrupación por método con `@Nested class ValidateTruck`.
+- Naming `when_{condición}_expect_{resultado}`.
+- Patrón AAA en cada test.
+- Primer objetivo: dejar cada caso en rojo por **ausencia de comportamiento**, no por errores de compilación.
 
-- Entrada: ETD del destino ya pasada.
-- Esperado:
-  - aviso informativo
-  - el flujo sigue permitiendo confirmación
+## Contrato de respuesta que debe sostener TDD
 
-#### Test 07: when_destination_order_is_incompatible_expect_order_rule
-
-- Entrada: incompatibilidad de orden del destino.
-- Esperado:
-  - regla de orden no válida
-  - mensaje específico del problema
-
-## Estructura de validación API
-
-### Endpoint `/v1/transfer/validate`
-
-Se escribirán pruebas de contrato para verificar que la respuesta contiene al menos:
+Cada caso de validación debe contribuir a que el contrato final incluya:
 
 - `isCompatible`
 - `incompatibilityLevel`
 - `commonCriteria`
-- `rules[]`
+- `rules[]` con al menos:
+  - `name`
+  - `valid`
+  - `message`
+  - `param` cuando aplique
 
-Cada regla debe incluir:
+## Estrategia de ejecución Red → Green → Refactor (por validación)
 
-- `name`
-- `valid`
-- `message`
+Para cada validación `Vn`:
 
-### Endpoint `/v1/transfer/truck/search`
+1. **Red**
+   - Escribir o ajustar el/los tests del bloque `Vn`.
+   - Ejecutar prueba focalizada del caso.
+   - Confirmar fallo por comportamiento esperado no implementado.
 
-Se define una prueba para comprobar que devuelve:
+2. **Green**
+   - Implementar la lógica mínima para pasar solo `Vn`.
+   - Re-ejecutar prueba focalizada.
+   - Mantener sin regresiones en validaciones ya cerradas.
 
-- `trucks[]`
-- `id`
-- `name`
-- `stopId`
-- `trailerLicensePlate`
-- `summary`
+3. **Refactor**
+   - Limpiar duplicaciones (reglas, mensajes, construcción de respuesta).
+   - Mantener semántica funcional intacta.
 
-## Red → Green → Refactor
+## Orden de implementación comprometido
 
-### Fase Rojo
+1. **V1 Planificación incompatible** (incluye tienda sin ruta)
+2. V2 Volumen insuficiente
+3. V3 Origen finalizado
+4. V4 Destino cerrado
+5. V5 ETD en pasado
+6. V6 Orden incompatible
 
-1. Se escriben los tests de validación de negocio.
-2. Se ejecutan y deben fallar porque la lógica aún no existe.
-3. Se confirma que el fallo refleja la ausencia de comportamiento requerido.
+## Criterio de cierre de la fase TDD
 
-### Fase Verde
+Se considera cerrada la fase de diseño TDD cuando:
 
-1. Se implementa la lógica mínima para cumplir el comportamiento esperado.
-2. Se reejecutan solo los tests objetivo.
-3. Se corrigen errores de contrato o reglas de negocio.
-
-### Fase Refactor
-
-1. Se revisa si la lógica está duplicada.
-2. Se consolida la estructura de reglas y mensajes.
-3. Se mantiene la misma semántica funcional sin cambios de comportamiento.
-
-## Criterios de aceptación para cerrar la historia
-
-- Los avisos de incompatibilidad aparecen en los escenarios esperados.
-- Los mensajes son claros y accionables.
-- La respuesta de API incluye reglas y no solo un booleano.
-- El flujo de confirmación queda definido para escenarios críticos.
-- Las pruebas quedan documentadas con evidencia reproducible.
-
-## Siguiente paso concreto
-
-Antes de implementar, se escribirá la suite inicial de pruebas en el repositorio del proyecto y se ejecutará para confirmar el estado rojo. Una vez validado, se implementará la lógica de compatibilidad y se revisará la salida del endpoint.
+- Las 6 validaciones principales están documentadas con sus casos.
+- Cada caso tiene resultado esperado mínimo verificable.
+- El orden de implementación incremental está definido.
+- Existe trazabilidad explícita entre historia funcional y casos de prueba.
